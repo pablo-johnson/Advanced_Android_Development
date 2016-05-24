@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="digital_text_size">40dp</dimen>
+    <dimen name="digital_text_size_round">45dp</dimen>
+    <dimen name="digital_text_size_seconds">20dp</dimen>
+    <dimen name="digital_text_size_seconds_round">22dp</dimen>
+    <dimen name="digital_x_offset">45dp</dimen>
+    <dimen name="digital_x_offset_round">50dp</dimen>
+    <dimen name="digital_x_seconds_offset">10dp</dimen>
+    <dimen name="digital_x_seconds_offset_round">162dp</dimen>
+    <dimen name="digital_time_y_offset">80dp</dimen>
+    <dimen name="digital_date_y_offset">80dp</dimen>
+
+    <dimen name="defaultTopMargin">15dp</dimen>
+    <dimen name="timeTopMarginRound">38dp</dimen>
+    <dimen name="timeTopMargin">40dp</dimen>
+
+
+    <dimen name="timeTextSize">35dp</dimen>
+    <dimen name="secondsTextSize">16dp</dimen>
+    <dimen name="dateTextSize">20dp</dimen>
+    <dimen name="weatherTextSize">25dp</dimen>
+
+    <dimen name="weatherIconSize">45dp</dimen>
+</resources>
