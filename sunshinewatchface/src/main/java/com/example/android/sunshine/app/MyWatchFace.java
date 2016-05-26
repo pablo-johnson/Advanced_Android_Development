@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.johnson.wear.sunshinewatchface;
+package com.example.android.sunshine.app;
 
 import android.annotation.TargetApi;
 import android.content.BroadcastReceiver;
@@ -40,10 +40,11 @@ import android.support.annotation.Nullable;
 import android.support.wearable.watchface.CanvasWatchFaceService;
 import android.support.wearable.watchface.WatchFaceStyle;
 import android.text.format.Time;
+import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.WindowInsets;
-import android.widget.Toast;
 
+import com.example.android.sunshine.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.wearable.DataApi;
@@ -55,7 +56,6 @@ import com.google.android.gms.wearable.Wearable;
 
 import java.lang.ref.WeakReference;
 import java.text.DateFormatSymbols;
-import java.util.Calendar;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
@@ -77,7 +77,6 @@ public class MyWatchFace extends CanvasWatchFaceService {
      * Handler message id for updating the time periodically in interactive mode.
      */
     private static final int MSG_UPDATE_TIME = 0;
-    private boolean isRound;
 
     @Override
     public Engine onCreateEngine() {
@@ -110,16 +109,12 @@ public class MyWatchFace extends CanvasWatchFaceService {
         private static final String SUNSHINE_PATH = "/sunshine_weather";
         final Handler mUpdateTimeHandler = new EngineHandler(this);
         boolean mRegisteredTimeZoneReceiver = false;
-        Paint mBackgroundPaint;
         Paint mTextPaint;
         boolean mAmbient;
-        Calendar mCalendar;
 
         private String lastMaxTemp;
         private String lastMinTemp;
         private Bitmap mWeatherIconBitmap;
-        float mXOffset;
-        float mYOffset;
 
         boolean mLowBitAmbient;
         private GoogleApiClient googleClient;
@@ -132,6 +127,7 @@ public class MyWatchFace extends CanvasWatchFaceService {
         private Paint minPaint;
         private Paint secondsPaint;
         private Paint timePaint;
+        private boolean isRound;
 
 
         private float defaultOffset;
@@ -163,7 +159,7 @@ public class MyWatchFace extends CanvasWatchFaceService {
                     .setShowSystemUiTime(false)
                     .setAcceptsTapEvents(true)
                     .build());
-            
+
             mTime = new Time();
 
             //Get day and month names
@@ -263,29 +259,6 @@ public class MyWatchFace extends CanvasWatchFaceService {
             updateTimer();
         }
 
-        /**
-         * Captures tap event (and tap type) and toggles the background color if the user finishes
-         * a tap.
-         */
-        @Override
-        public void onTapCommand(int tapType, int x, int y, long eventTime) {
-            switch (tapType) {
-                case TAP_TYPE_TOUCH:
-                    // The user has started touching the screen.
-                    break;
-                case TAP_TYPE_TOUCH_CANCEL:
-                    // The user has started a different gesture or otherwise cancelled the tap.
-                    break;
-                case TAP_TYPE_TAP:
-                    // The user has completed the tap gesture.
-                    // TODO: Add code to handle the tap gesture.
-                    Toast.makeText(getApplicationContext(), R.string.message, Toast.LENGTH_SHORT)
-                            .show();
-                    break;
-            }
-            invalidate();
-        }
-
         @Override
         public void onDraw(Canvas canvas, Rect bounds) {
             mTime.setToNow();
@@ -310,11 +283,11 @@ public class MyWatchFace extends CanvasWatchFaceService {
             Resources resources = getResources();
 
             backgroundPaint = new Paint();
-            backgroundPaint.setColor(resources.getColor(R.color.skyBackground, getTheme()));
+            backgroundPaint.setColor(resources.getColor(R.color.skyBackground));
 
             defaultOffset = resources.getDimension(R.dimen.defaultTopMargin);
-            int whiteColor = resources.getColor(R.color.digital_text, getTheme());
-            int grayColor = resources.getColor(R.color.grayText, getTheme());
+            int whiteColor = resources.getColor(R.color.digital_text);
+            int grayColor = resources.getColor(R.color.grayText);
 
             float textSizeTime = resources.getDimension(R.dimen.timeTextSize);
             timePaint = createTextPaint(whiteColor, textSizeTime);
@@ -465,7 +438,7 @@ public class MyWatchFace extends CanvasWatchFaceService {
 
         @Override
         public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
+            Log.e("Pablo", connectionResult.getErrorMessage());
         }
 
         @Override

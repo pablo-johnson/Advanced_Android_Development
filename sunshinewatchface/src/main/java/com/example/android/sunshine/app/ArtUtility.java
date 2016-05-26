@@ -1,4 +1,6 @@
-package com.johnson.wear.sunshinewatchface;
+package com.example.android.sunshine.app;
+
+import com.example.android.sunshine.R;
 
 /**
  * http://bugs.openweathermap.org/projects/api/wiki/Weather_Condition_Codes
