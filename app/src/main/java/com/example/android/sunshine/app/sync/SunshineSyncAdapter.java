@@ -65,7 +65,7 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
     public static final String ACTION_DATA_UPDATED =
             "com.example.android.sunshine.app.ACTION_DATA_UPDATED";
     // Interval at which to sync with the weather, in seconds.
-    // 60 seconds (1 minute) * 180 = 3 hours
+    // 60 seconds (1 minute) * 60 = 1 hour
     public static final int SYNC_INTERVAL = BuildConfig.DEBUG ? 10 : 60 * 60;
     public static final int SYNC_FLEXTIME = SYNC_INTERVAL / 3;
     private static final long DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
@@ -394,6 +394,7 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
     }
 
     int debugCount = 0;
+
     /**
      * Notifies any synced wearable that there might be new data
      * from the current weather that needs to be handled.
@@ -403,24 +404,25 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
         String locationQuery = Utility.getPreferredLocation(getContext());
         Uri weatherUri = WeatherContract.WeatherEntry.buildWeatherLocationWithDate(locationQuery, System.currentTimeMillis());
         Cursor cursor = getContext().getContentResolver().query(weatherUri, NOTIFY_WEATHER_PROJECTION, null, null, null);
-        if (cursor==null || !cursor.moveToFirst()){
+        if (cursor == null || !cursor.moveToFirst()) {
             return;
         }
 
         //test purposes
-        debugCount = debugCount + ((BuildConfig.DEBUG)? 1:0);
-        int weatherId = (BuildConfig.DEBUG)? new Random().nextInt(5) + 800 : cursor.getInt(INDEX_WEATHER_ID);
+        debugCount = debugCount + ((BuildConfig.DEBUG) ? 1 : 0);
+        int weatherId = (BuildConfig.DEBUG) ? new Random().nextInt(5) + 800 : cursor.getInt(INDEX_WEATHER_ID);
+        Log.e("Pablo", "weatherId " + weatherId);
         PutDataMapRequest dataMapRequest = PutDataMapRequest.create("/sunshine_weather");
-        dataMapRequest.getDataMap().putString("maxTemp",Utility.formatTemperature(getContext(),cursor.getDouble(INDEX_MAX_TEMP)+debugCount));
-        dataMapRequest.getDataMap().putString("minTemp",Utility.formatTemperature(getContext(),cursor.getDouble(INDEX_MIN_TEMP)+debugCount));
-        dataMapRequest.getDataMap().putInt("weatherId",weatherId);
+        dataMapRequest.getDataMap().putString("maxTemp", Utility.formatTemperature(getContext(), cursor.getDouble(INDEX_MAX_TEMP) + debugCount));
+        dataMapRequest.getDataMap().putString("minTemp", Utility.formatTemperature(getContext(), cursor.getDouble(INDEX_MIN_TEMP) + debugCount));
+        dataMapRequest.getDataMap().putInt("weatherId", weatherId);
 
 
         PutDataRequest request = dataMapRequest.asPutDataRequest();
-        Wearable.DataApi.putDataItem(googleClient,request).setResultCallback(new ResultCallback<DataApi.DataItemResult>() {
+        Wearable.DataApi.putDataItem(googleClient, request).setResultCallback(new ResultCallback<DataApi.DataItemResult>() {
             @Override
             public void onResult(@NonNull DataApi.DataItemResult dataItemResult) {
-                if (dataItemResult.getStatus().isSuccess()){
+                if (dataItemResult.getStatus().isSuccess()) {
                     Log.d("PUTDATA", "SUCCESS - data sent");
                 } else {
                     Log.d("PUTDATA", "FAILURE - data not sent");
